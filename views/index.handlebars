@@ -1,0 +1,98 @@
+{{!-- <div class="container"> --}}
+  <h1>Burger-a-thon!</h1>
+  <h2>Make burgers and eat them!!!</h2>
+  <div id="platter" style="width: 30%; float: left">
+    <h2>Platter</h2>
+    <ul>
+      {{#each burgers}}
+        {{#unless devoured}}
+          <li>
+            <p>
+              {{this.burger_name}}
+              <button data-burgerid="{{this.id}}" id="devour-burger" class="devour-burger">Devour burger!</button>
+            </p>
+          </li>
+        {{/unless}}
+      {{/each}}
+    </ul>
+  </div>
+  
+  <div id="kitchen" style="width: 30%; float: left">
+    <h2>Make a Burger</h2>
+    <form class="create-form">
+
+      <div class="form-group">
+        <label for="burger">Burger Name:</label>
+        <input type="text" id="burger" name="burger">
+      </div>
+
+      <button type="submit">Make Burger</button>
+    </form>
+  </div>
+
+  <div id="dirty-dishes" style="width: 30%; float: left">
+    <h2>Devoured burgers</h2>
+    <ul>
+      {{#each burgers}}
+        {{#if devoured}}
+          <li>
+            <p>
+              {{this.burger_name}}
+            </p>
+          </li>
+        {{/if}}
+      {{/each}}
+    </ul>
+  </div>
+    
+{{!-- </div> --}}
+
+<script type="text/javascript">
+  $(document).on("click", ".devour-burger",function(event) {
+    // Get the ID from the button.
+    // This is shorthand for $(this).attr("data-burgerid")
+    var id = $(this).data("burgerid");
+
+    console.log("devoured burger id: " + id);
+
+    // Send the DELETE request.
+    $.ajax("/api/burgers/" + id, {
+      type: "PUT",
+      data: id
+    }).then(
+      function() {
+        console.log("devoured burger #", id);
+        // Reload the page to get the updated list
+        location.reload();
+      }
+    );
+  });
+
+  $(".create-form").on("submit" , function(event) {
+    // Make sure to preventDefault on a submit event.
+    event.preventDefault();
+
+    var burger = document.getElementById("burger");
+    console.log(burger.value);
+    var burgerName = burger.value.trim();
+
+    // [name=burger] will find an element with a "name" attribute equal to the string "burger"
+    var newBurger = {
+      burger_name: burgerName
+    };
+
+    // Send the POST request.
+    $.ajax("/api/burgers", {
+      type: "POST",
+      data: newBurger
+    }).then(
+      function() {
+        console.log("created new burger: " + newBurger);
+        // Reload the page to get the updated list
+        location.reload();
+      }
+    );
+  });
+
+</script>
+
