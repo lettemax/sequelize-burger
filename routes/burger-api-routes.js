@@ -5,12 +5,19 @@ module.exports = function(app) {
     db.Burger.findAll({
     }).then(function(allBurgers) {
       res.json(allBurgers);
-    });
+    })
+    .catch(function(err) {
+        res.status(500).json(err);
+      });
   });
 
   app.post("/api/burgers", function(req, res) {
-    db.Burger.create(req.body).then(function(newBurger) {
+    db.Burger.create(req.body)
+    .then(function(newBurger) {
       res.json(newBurger);
+    })
+    .catch(function(err) {
+        res.status(500).json(err);
     });
   });
 
