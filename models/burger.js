@@ -25,7 +25,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   var Burger = sequelize.define("Burger", {
-    name: {
+    burger_name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {

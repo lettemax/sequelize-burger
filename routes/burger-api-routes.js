@@ -4,7 +4,9 @@ module.exports = function(app) {
   app.get("/", function(req, res) {
     db.Burger.findAll({
     }).then(function(allBurgers) {
-      res.json(allBurgers);
+      console.log("all burgers: " + allBurgers);
+      res.render("index", allBurgers);
+
     })
     .catch(function(err) {
         res.status(500).json(err);
